@@ -22,19 +22,18 @@ except FileNotFoundError:
     print("Error: 'courses.csv' file not found. Please make sure it's in the same directory as main.py.")
     df_courses = pd.DataFrame() # Create an empty DataFrame to avoid errors
 
-# Handler for the /start command
+# Handler for the /start command and welcome messages
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Sends a welcome message with instructions."""
+    """Sends a welcome message and asks how to help."""
     await update.message.reply_text(
-        "Hello! I'm BrightLearn's Course Bot. "
-        "I can help you find information about our courses.\n\n"
-        "Here are some things you can ask:\n"
-        "- 'What courses are available?'\n"
-        "- 'Tell me about the Data Science Pro course.'\n"
-        "- 'What's the fee for the Digital Marketing course?'\n"
-        "- 'Who is the mentor for the Cloud Computing course?'\n"
-        "- 'Give me the syllabus for the Full Stack Web Dev course.'"
+        "Hello! I am the Infotech company's course bot. How can I help you today?\n\n"
+        "You can ask me about our courses, their fees, mentors, or even the syllabus for any course."
     )
+
+# New handler for "thank you" messages
+async def thank_you(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Responds to 'thank you' messages."""
+    await update.message.reply_text("You're welcome! Let me know if you need anything else.")
 
 # Handler for getting a list of courses
 async def get_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -60,11 +59,16 @@ async def generate_syllabus(course_name: str) -> str:
         print(f"Error generating content: {e}")
         return "I'm sorry, I couldn't generate a syllabus for that course. Please try again later."
 
-
 # Handler for general text messages
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Analyzes the user's message and provides a relevant answer from the CSV."""
     user_message = update.message.text.lower()
+    
+    # Check for "thank you" keywords
+    if "thank" in user_message or "thanks" in user_message:
+        await thank_you(update, context)
+        return
+
     response = "I'm sorry, I couldn't find information for that. Please try asking about a specific course or ask 'what courses are available'."
 
     if not df_courses.empty:
@@ -145,6 +149,7 @@ def main() -> None:
 
     # Add command and message handlers
     application.add_handler(CommandHandler("start", start))
+    application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND) & (filters.Regex(r'(?i)hi|hello|hey|welcome')), start))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND) & filters.Regex(r'(?i)course|courses|what courses|list of courses'), get_courses))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
 
