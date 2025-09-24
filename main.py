@@ -27,7 +27,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends a welcome message and asks how to help."""
     await update.message.reply_text(
         "Hello! I am the Infotech company's course bot. How can I help you today?\n\n"
-        "You can ask me about our courses, or ask a general question like 'what is business analytics?'."
+        "You can ask me about our courses, their fees, mentors, or even a general question like 'what is business analytics?'."
     )
 
 # Handler for "thank you" messages
@@ -46,18 +46,6 @@ async def get_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await update.message.reply_text(course_list)
     else:
         await update.message.reply_text("I'm sorry, I don't have a list of courses right now.")
-
-# Function to generate a response for a specific course query using Google API
-async def generate_course_response_with_gemini(course_name: str, user_message: str) -> str:
-    """Generates a response for a specific course query using the Gemini API."""
-    prompt = f"Using the following course details as a guide, please answer the user's question. If you are asked about the syllabus, make up a concise one in a professional format. Be concise. \n\nCourse: {course_name}\nQuestion: {user_message}\n\nCourse details:\n{df_courses[df_courses['course_name'] == course_name].to_string(index=False)}"
-    
-    try:
-        response = await model.generate_content_async(prompt)
-        return response.text
-    except Exception as e:
-        print(f"Error generating content: {e}")
-        return "I'm sorry, I'm unable to answer that question at the moment. Please try again later."
 
 # Function to generate a response for a general query using Google API
 async def generate_general_response_with_gemini(user_message: str) -> str:
@@ -82,20 +70,58 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return
 
     # Check for a specific course name in the user's message
-    found_course = None
+    found_course_data = None
     if not df_courses.empty:
-        for course_name in df_courses['course_name'].tolist():
-            if course_name.lower() in user_message:
-                found_course = course_name
+        for _, row in df_courses.iterrows():
+            if row['course_name'].lower() in user_message:
+                found_course_data = row
                 break
 
-    if found_course:
-        await update.message.reply_text("Thinking... Please wait a moment while I generate a response for you.")
-        ai_response = await generate_course_response_with_gemini(found_course, user_message)
-        await update.message.reply_text(ai_response, parse_mode='Markdown')
+    if found_course_data is not None:
+        # User is asking about a specific course, handle with CSV data first
+        if "mentor" in user_message or "trainer" in user_message:
+            response = f"The mentor for **{found_course_data['course_name']}** is {found_course_data['mentor_name']} from {found_course_data['mentor_company']}."
+        elif "fee" in user_message or "cost" in user_message:
+            response = f"The fee for **{found_course_data['course_name']}** is ₹{found_course_data['fee']}."
+        elif "duration" in user_message or "long" in user_message:
+            response = f"The **{found_course_data['course_name']}** course has a duration of {found_course_data['duration']}."
+        elif "placement" in user_message or "placed" in user_message or "package" in user_message:
+            response = (
+                f"For the **{found_course_data['course_name']}** course, {found_course_data['students_placed_offer']} students "
+                f"received offers out of {found_course_data['students_finished']} who finished. "
+                f"The average package is {found_course_data['average_package']}."
+            )
+        elif "sessions" in user_message:
+            response = (
+                f"The **{found_course_data['course_name']}** course includes {found_course_data['no_of_online_sessions']} online sessions "
+                f"and {found_course_data['no_of_offline_sessions']} offline sessions."
+            )
+        elif "syllabus" in user_message:
+            # Use AI for syllabus, but provide a custom prompt
+            await update.message.reply_text("Thinking... Please wait a moment while I generate a syllabus for you.")
+            prompt = f"Create a detailed 6-8 week syllabus for a professional course titled '{found_course_data['course_name']}'. Include weekly topics, key concepts, and a final project idea. The language should be concise and professional."
+            ai_response = await generate_general_response_with_gemini(prompt)
+            await update.message.reply_text(ai_response, parse_mode='Markdown')
+            return
+        else:
+            # If no specific keyword is found, provide a full summary
+            response = (
+                f"**{found_course_data['course_name']}**\n\n"
+                f"**Duration:** {found_course_data['duration']}\n"
+                f"**Fee:** ₹{found_course_data['fee']}\n"
+                f"**Mentor:** {found_course_data['mentor_name']} ({found_course_data['mentor_designation']} at {found_course_data['mentor_company']})\n"
+                f"**Sessions:** {found_course_data['no_of_online_sessions']} online, {found_course_data['no_of_offline_sessions']} offline\n"
+                f"**Real-time Project:** {found_course_data['realtime_project']}\n"
+                f"**Average Package:** {found_course_data['average_package']}\n"
+                f"**Placement Companies:** {found_course_data['placement_company'].replace(';', ', ')}\n"
+                f"**Course Rating:** {found_course_data['course_rating']} ⭐"
+            )
+        
+        await update.message.reply_text(response, parse_mode='Markdown')
         return
+
     else:
-        # If no course is found, treat it as a general question
+        # If no course is found, check if it's a general question for the AI
         await update.message.reply_text("Thinking... Please wait a moment while I get more information for you.")
         ai_response = await generate_general_response_with_gemini(user_message)
         await update.message.reply_text(ai_response, parse_mode='Markdown')
