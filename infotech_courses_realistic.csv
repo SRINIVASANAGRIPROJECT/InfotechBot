@@ -1,21 +1,11 @@
 course_name,duration,fee,mentor_name,mentor_company,mentor_designation,no_of_online_sessions,no_of_offline_sessions,realtime_project,students_enrolled,students_finished,students_placed_offer,average_package,placement_company,company_name,course_language,course_rating
-Python for Beginners,6 weeks,6000,Rahul Verma,Google,Software Engineer,12,4,Inventory App,120,110,90,3 LPA,Infosys,Infotech,English,4.5
-Data Science Mastery,12 weeks,12000,Sneha Kapoor,Microsoft,Data Scientist,20,8,Sales Prediction,150,140,110,4.2 LPA,TCS,Infotech,English,4.7
-Fullstack Web Development,16 weeks,15000,Ankit Sharma,Amazon,Fullstack Developer,25,10,E-commerce Website,180,170,140,4.5 LPA,Cognizant,Infotech,English,4.6
-AI & ML Specialist,18 weeks,18000,Priya Singh,IBM,AI Engineer,30,12,Chatbot Platform,200,190,160,5 LPA,HCL,Infotech,English,4.8
-Cybersecurity Expert,14 weeks,14000,Rohit Mehra,TCS,Cybersecurity Specialist,22,9,Secure Banking App,160,150,120,4.3 LPA,Infosys,Infotech,English,4.6
-Python for Beginners Level 2,6 weeks,8500,Rahul Verma,Google,Software Engineer,12,4,Inventory App,170,150,115,3.5 LPA,Infosys,Infotech,English,4.6
-Data Science Mastery Level 2,12 weeks,15000,Sneha Kapoor,Microsoft,Data Scientist,20,8,Sales Prediction,210,188,140,4.8 LPA,TCS,Infotech,English,4.6
-Fullstack Web Development Level 2,16 weeks,18500,Ankit Sharma,Amazon,Fullstack Developer,25,10,E-commerce Website,250,226,175,5.2 LPA,Cognizant,Infotech,English,4.7
-AI & ML Specialist Level 2,18 weeks,22000,Priya Singh,IBM,AI Engineer,30,12,Chatbot Platform,280,254,200,5.8 LPA,HCL,Infotech,English,4.7
-Cybersecurity Expert Level 2,14 weeks,18500,Rohit Mehra,TCS,Cybersecurity Specialist,22,9,Secure Banking App,250,222,165,5.2 LPA,Infosys,Infotech,English,4.7
-Python for Beginners Level 3,6 weeks,11000,Rahul Verma,Google,Software Engineer,12,4,Inventory App,220,190,140,4.0 LPA,Infosys,Infotech,English,4.4
-Data Science Mastery Level 3,12 weeks,17500,Sneha Kapoor,Microsoft,Data Scientist,20,8,Sales Prediction,260,228,165,5.3 LPA,TCS,Infotech,English,4.8
-Fullstack Web Development Level 3,16 weeks,21000,Ankit Sharma,Amazon,Fullstack Developer,25,10,E-commerce Website,300,266,200,5.7 LPA,Cognizant,Infotech,English,4.5
-AI & ML Specialist Level 3,18 weeks,24500,Priya Singh,IBM,AI Engineer,30,12,Chatbot Platform,330,294,225,6.3 LPA,HCL,Infotech,English,4.9
-Cybersecurity Expert Level 3,14 weeks,21000,Rohit Mehra,TCS,Cybersecurity Specialist,22,9,Secure Banking App,300,262,190,5.7 LPA,Infosys,Infotech,English,4.5
-Python for Beginners Level 4,6 weeks,13500,Rahul Verma,Google,Software Engineer,12,4,Inventory App,270,230,165,4.5 LPA,Infosys,Infotech,English,4.6
-Data Science Mastery Level 4,12 weeks,20000,Sneha Kapoor,Microsoft,Data Scientist,20,8,Sales Prediction,310,268,190,5.8 LPA,TCS,Infotech,English,4.6
-Fullstack Web Development Level 4,16 weeks,23500,Ankit Sharma,Amazon,Fullstack Developer,25,10,E-commerce Website,350,306,225,6.2 LPA,Cognizant,Infotech,English,4.7
-AI & ML Specialist Level 4,18 weeks,27000,Priya Singh,IBM,AI Engineer,30,12,Chatbot Platform,380,334,250,6.8 LPA,HCL,Infotech,English,4.7
-Cybersecurity Expert Level 4,14 weeks,23500,Rohit Mehra,TCS,Cybersecurity Specialist,22,9,Secure Banking App,350,302,215,6.2 LPA,Infosys,Infotech,English,4.7
+Python AI,3 months,40000,Dr. Rahul Sharma,TechCorp,Senior AI Consultant,20,5,Yes,50,45,40,8.5 LPA,TechCorp,Infotech,English,4.7
+Data Science,6 months,45000,Ms. Ananya Singh,DataCorp,Lead Data Scientist,25,5,Yes,120,100,80,7.5 LPA,InfoSoft,Infotech,English,4.8
+Web Development,4 months,35000,Mr. Sameer Gupta,WebSolutions,Full Stack Developer,15,5,Yes,80,70,60,6.5 LPA,WebSolutions,Infotech,English,4.5
+Machine Learning,5 months,50000,Dr. Priya Menon,AI Labs,AI Researcher,20,5,Yes,100,90,85,9 LPA,TechCorp,Infotech,English,4.9
+Cloud Computing,4 months,42000,Mr. Arjun Rao,CloudNet,Cloud Architect,18,4,Yes,60,55,50,7 LPA,InfoSoft,Infotech,English,4.6
+Cyber Security,3 months,38000,Ms. Kavita Sharma,SecureTech,Security Analyst,15,5,Yes,40,35,30,6.5 LPA,SecureTech,Infotech,English,4.4
+Blockchain Development,6 months,48000,Mr. Rajesh Kumar,BlockWorks,Blockchain Developer,22,6,Yes,70,65,60,8 LPA,BlockWorks,Infotech,English,4.7
+UI/UX Design,3 months,30000,Ms. Anjali Verma,DesignHub,Lead Designer,12,3,Yes,50,45,40,5.5 LPA,DesignHub,Infotech,English,4.3
+Digital Marketing,2 months,25000,Mr. Nitin Joshi,MarketGuru,Marketing Specialist,10,2,Yes,80,75,70,4.5 LPA,MarketGuru,Infotech,English,4.2
+Data Analytics,4 months,40000,Ms. Ritu Malhotra,DataCorp,Data Analyst,20,5,Yes,90,85,80,7 LPA,InfoSoft,Infotech,English,4.6
