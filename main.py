@@ -3,13 +3,17 @@ import pandas as pd
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 from dotenv import load_dotenv
+import google.generativeai as genai
 
 # Load environment variables from a .env file
 load_dotenv()
 
-# Get your Telegram bot token and Google Project ID from environment variables
+# Get your Telegram bot token and Google API key from environment variables
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-# GOOGLE_PROJECT_ID = os.getenv("GOOGLE_PROJECT_ID") # Uncomment if you're using Google APIs
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+# Initialize the generative model
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Load the courses data from the CSV file
 try:
@@ -28,7 +32,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         "- 'What courses are available?'\n"
         "- 'Tell me about the Data Science Pro course.'\n"
         "- 'What's the fee for the Digital Marketing course?'\n"
-        "- 'Who is the mentor for the Cloud Computing course?'"
+        "- 'Who is the mentor for the Cloud Computing course?'\n"
+        "- 'Give me the syllabus for the Full Stack Web Dev course.'"
     )
 
 # Handler for getting a list of courses
@@ -43,6 +48,19 @@ async def get_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     else:
         await update.message.reply_text("I'm sorry, I don't have a list of courses right now.")
 
+# New function to generate a syllabus
+async def generate_syllabus(course_name: str) -> str:
+    """Generates a detailed syllabus for a given course using the Gemini API."""
+    prompt = f"Create a detailed 6-8 week syllabus for a professional course titled '{course_name}'. Include weekly topics, key concepts, and a final project idea. The language should be concise and professional."
+    
+    try:
+        response = await model.generate_content_async(prompt)
+        return response.text
+    except Exception as e:
+        print(f"Error generating content: {e}")
+        return "I'm sorry, I couldn't generate a syllabus for that course. Please try again later."
+
+
 # Handler for general text messages
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Analyzes the user's message and provides a relevant answer from the CSV."""
@@ -54,7 +72,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         for index, row in df_courses.iterrows():
             course_name_lower = row['course_name'].lower()
             if course_name_lower in user_message:
-                # Check for specific queries about the course
+                
+                # Check for "syllabus" query
+                if "syllabus" in user_message:
+                    await update.message.reply_text("Generating a syllabus for you. This might take a moment...")
+                    syllabus = await generate_syllabus(row['course_name'])
+                    await update.message.reply_text(syllabus, parse_mode='Markdown')
+                    return
+                
+                # Check for other specific queries about the course
                 if "mentor" in user_message or "trainer" in user_message:
                     response = (
                         f"The mentor for **{row['course_name']}** is {row['mentor_name']} "
@@ -102,9 +128,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                         f"**Placement Companies:** {row['placement_company'].replace(';', ', ')}\n"
                         f"**Course Rating:** {row['course_rating']} ⭐"
                     )
-                break
+                
+                await update.message.reply_text(response, parse_mode='Markdown')
+                return
     
-    await update.message.reply_text(response, parse_mode='Markdown')
+    await update.message.reply_text(response)
 
 def main() -> None:
     """Starts the bot."""
