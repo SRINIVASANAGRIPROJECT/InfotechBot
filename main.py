@@ -320,8 +320,6 @@ SYLLABUSES = {
 **Week 1-2: The Product Manager Role**
 - Introduction to product management.
 - Product life cycle and agile development.
-- The 4 Ps of marketing: product, price, place, and promotion.
-- Market research and competitive analysis.
 
 **Week 3-4: User Research & Strategy**
 - Conducting user research and competitive analysis.
@@ -376,8 +374,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends a welcome message and asks how to help."""
     await update.message.reply_text(
         "Hello! I am the Infotech company's course bot. How can I help you today?\n\n"
-        "You can ask me about our courses, their fees, mentors, or even the syllabus for any course. "
-        "You can also ask me any general question, and I will do my best to answer it!"
+        "You can ask me about our courses, their fees, mentors, or even the syllabus for any course."
     )
 
 # New handler for "thank you" messages
@@ -397,38 +394,56 @@ async def get_courses(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     else:
         await update.message.reply_text("I'm sorry, I don't have a list of courses right now.")
 
-# Main function to handle any type of message
+# Handler for general text messages
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Analyzes the user's message and provides a relevant answer from the CSV."""
     user_message = update.message.text.lower()
     
-    # Check for "thank you" keywords first
+    # Check for "thank you" keywords
     if "thank" in user_message or "thanks" in user_message:
         await thank_you(update, context)
         return
 
-    # Check if the query is specific to a course in the CSV
-    found_course = False
+    # Look for a specific course name in the user's message
     if not df_courses.empty:
         for index, row in df_courses.iterrows():
             course_name_lower = row['course_name'].lower()
             if course_name_lower in user_message:
-                found_course = True
                 
-                # Handle specific queries (Syllabus, mentor, fee, etc.)
+                # Check for "syllabus" query and respond with hardcoded text
                 if "syllabus" in user_message:
                     syllabus_text = SYLLABUSES.get(row['course_name'], "Syllabus not found for this course.")
                     await update.message.reply_text(f"Here is a sample syllabus for the **{row['course_name']}** course:\n\n{syllabus_text}", parse_mode='Markdown')
                     return
                 
+                # Check for general, open-ended questions and use Gemini API
+                if any(phrase in user_message for phrase in ["use of", "why study", "what is the benefit of", "career in"]):
+                    await update.message.reply_text("Please wait a moment while I get more information for you...")
+                    prompt = f"Explain the benefits and career opportunities of studying {row['course_name']}. The answer should be concise and professional."
+                    try:
+                        ai_response = await model.generate_content_async(prompt)
+                        await update.message.reply_text(ai_response.text, parse_mode='Markdown')
+                    except Exception as e:
+                        print(f"Error generating content: {e}")
+                        await update.message.reply_text("I'm sorry, I'm unable to answer that question at the moment. Please try again later.")
+                    return
+                
+                # Check for other specific queries about the course (from your CSV)
                 if "mentor" in user_message or "trainer" in user_message:
                     response = (
                         f"The mentor for **{row['course_name']}** is {row['mentor_name']} "
                         f"from {row['mentor_company']}."
                     )
+                    await update.message.reply_text(response, parse_mode='Markdown')
+                    return
                 elif "fee" in user_message or "cost" in user_message:
                     response = f"The fee for **{row['course_name']}** is ₹{row['fee']}."
+                    await update.message.reply_text(response, parse_mode='Markdown')
+                    return
                 elif "duration" in user_message or "long" in user_message:
                     response = f"The **{row['course_name']}** course has a duration of {row['duration']}."
+                    await update.message.reply_text(response, parse_mode='Markdown')
+                    return
                 elif "placement" in user_message or "placed" in user_message or "package" in user_message:
                     try:
                         students_finished = int(row['students_finished'])
@@ -444,17 +459,25 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                             response = f"Placement data for the **{row['course_name']}** course is not available yet."
                     except (ValueError, TypeError):
                         response = f"Placement data for the **{row['course_name']}** course is not in a valid format."
+                    await update.message.reply_text(response, parse_mode='Markdown')
+                    return
                 elif "sessions" in user_message:
                     response = (
                         f"The **{row['course_name']}** course includes {row['no_of_online_sessions']} online sessions "
                         f"and {row['no_of_offline_sessions']} offline sessions."
                     )
+                    await update.message.reply_text(response, parse_mode='Markdown')
+                    return
                 elif "language" in user_message:
                     response = f"The **{row['course_name']}** course is taught in {row['course_language']}."
+                    await update.message.reply_text(response, parse_mode='Markdown')
+                    return
                 elif "rating" in user_message:
                     response = f"The **{row['course_name']}** course has a rating of {row['course_rating']} ⭐."
+                    await update.message.reply_text(response, parse_mode='Markdown')
+                    return
                 else:
-                    # Provide a full summary if no specific keyword is found
+                    # If no specific keyword is found, provide a full summary
                     response = (
                         f"**{row['course_name']}**\n\n"
                         f"**Duration:** {row['duration']}\n"
@@ -466,24 +489,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                         f"**Placement Companies:** {row['placement_company'].replace(';', ', ')}\n"
                         f"**Course Rating:** {row['course_rating']} ⭐"
                     )
-                
-                await update.message.reply_text(response, parse_mode='Markdown')
-                return
+                    await update.message.reply_text(response, parse_mode='Markdown')
+                    return
     
-    # If no specific course-related query was found, use the Google API for a general answer
-    if not found_course:
-        await update.message.reply_text("Thinking... Please wait a moment while I get more information for you...")
-        try:
-            # Send the user's raw message to the Google API
-            ai_response = await model.generate_content_async(user_message)
-            # If the response is not empty, send it back
-            if ai_response.text:
-                await update.message.reply_text(ai_response.text, parse_mode='Markdown')
-            else:
-                await update.message.reply_text("I'm sorry, I couldn't generate a response for that. Please try again later.")
-        except Exception as e:
-            print(f"Error generating content: {e}")
-            await update.message.reply_text("I'm sorry, I'm unable to answer that question at the moment. Please try again later.")
+    # If no course is found, provide a generic fallback
+    await update.message.reply_text("I'm sorry, I couldn't find information for that. Please try asking about a specific course or ask 'what courses are available'.")
 
 def main() -> None:
     """Starts the bot."""
