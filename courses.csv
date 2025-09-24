@@ -1,0 +1,21 @@
+course_name,duration,fee,mentor_name,mentor_company,mentor_designation,no_of_online_sessions,no_of_offline_sessions,realtime_project,students_enrolled,students_finished,students_placed_offer,average_package,placement_company,company_name,course_language,course_rating
+Data Science Pro,6 months,50000,Priya Sharma,Google,Senior Data Scientist,40,8,Yes,150,120,110,14 LPA,Google;Microsoft;Amazon,BrightLearn,English,4.8
+Full Stack Web Dev,4 months,40000,Rohan Gupta,Meta,Lead Software Engineer,30,4,Yes,200,180,175,12 LPA,Meta;Swiggy;Flipkart,BrightLearn,English,4.9
+Digital Marketing,3 months,30000,Anjali Verma,HubSpot,Marketing Head,25,2,No,120,115,100,8 LPA,HubSpot;Nykaa,BrightLearn,English,4.7
+Cloud Computing with AWS,5 months,55000,Vikram Singh,Amazon,Cloud Architect,35,5,Yes,130,110,105,15 LPA,AWS;Deloitte;TCS,BrightLearn,English,4.9
+Cyber Security Essentials,6 months,60000,Nisha Patel,Palo Alto Networks,Security Analyst,40,10,Yes,100,80,75,13 LPA,Palo Alto;Cisco,BrightLearn,English,4.8
+UI/UX Design Fundamentals,4 months,35000,Siddharth Jain,Adobe,Product Designer,30,8,Yes,180,160,150,9 LPA,Adobe;Figma;Microsoft,BrightLearn,English,4.9
+Advanced Python Programming,3 months,25000,Meera Reddy,Spotify,Backend Engineer,25,0,Yes,250,240,220,10 LPA,Spotify;Google,BrightLearn,English,4.8
+Project Management (PMP),4 months,45000,Arjun Mehta,Salesforce,Program Manager,30,5,No,90,85,80,11 LPA,Salesforce;Accenture,BrightLearn,English,4.7
+Blockchain Development,6 months,70000,Aditi Rao,Coinbase,Blockchain Developer,40,4,Yes,70,60,55,18 LPA,Coinbase;Polygon,BrightLearn,English,4.9
+Graphic Design Masterclass,3 months,28000,Karan Johar,Canva,Lead Designer,20,10,Yes,160,150,130,7 LPA,Canva;Zomato,BrightLearn,English,4.8
+Business Analytics,5 months,52000,Tanvi Shah,McKinsey,Data Analyst,35,5,Yes,110,100,95,14 LPA,McKinsey;BCG,BrightLearn,English,4.9
+iOS App Development,5 months,48000,David D'souza,Apple,iOS Engineer,35,5,Yes,80,70,65,16 LPA,Apple;Cupertino,BrightLearn,English,4.9
+Machine Learning Engineering,7 months,75000,Priya Sharma,Google,ML Engineer,50,10,Yes,120,100,98,20 LPA,Google;NVIDIA,BrightLearn,English,5.0
+Content Writing & SEO,2 months,20000,Sneha Tiwari,Ahrefs,Content Strategist,15,0,No,300,290,250,6 LPA,Ahrefs;Semrush,BrightLearn,English,4.7
+Financial Modeling,4 months,40000,Rajesh Kumar,Goldman Sachs,Financial Analyst,30,5,Yes,100,90,85,15 LPA,Goldman Sachs;JP Morgan,BrightLearn,English,4.8
+Human Resource Management,3 months,32000,Fatima Khan,LinkedIn,HR Manager,25,2,No,110,105,90,8 LPA,LinkedIn;Microsoft,BrightLearn,English,4.6
+DevOps Engineering,5 months,65000,Anand Iyer,Microsoft,DevOps Lead,35,5,Yes,140,120,115,17 LPA,Microsoft;Atlassian,BrightLearn,English,4.9
+Product Management,4 months,55000,Riya Kapoor,Google,Senior Product Manager,30,5,Yes,150,135,130,19 LPA,Google;Amazon;Flipkart,BrightLearn,English,5.0
+Data Structures & Algorithms,4 months,30000,Rohan Gupta,Meta,Software Engineer,40,0,Yes,400,350,330,11 LPA,Meta;Amazon;Google,BrightLearn,English,4.9
+Video Editing & VFX,3 months,35000,Aakash Singh,Red Chillies,VFX Artist,20,10,Yes,130,120,110,7 LPA,Red Chillies VFX,BrightLearn,Hindi,4.8
