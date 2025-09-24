@@ -27,7 +27,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends a welcome message and asks how to help."""
     await update.message.reply_text(
         "Hello! I am the Infotech company's course bot. How can I help you today?\n\n"
-        "You can ask me about our courses, their fees, mentors, or even a general question like 'what is business analytics?'."
+        "You can ask me about our courses, their fees, mentors, or even general questions like 'which course is best?'."
     )
 
 # Handler for "thank you" messages
@@ -121,11 +121,33 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return
 
     else:
-        # If no course is found, check if it's a general question for the AI
-        await update.message.reply_text("Thinking... Please wait a moment while I get more information for you.")
-        ai_response = await generate_general_response_with_gemini(user_message)
-        await update.message.reply_text(ai_response, parse_mode='Markdown')
-        return
+        # If no course is found, check for general questions and use the AI
+        if "which course is best" in user_message:
+            prompt = "In a professional and helpful tone, explain that the 'best' course depends on a person's individual interests, career goals, and prior experience. Suggest that they review the syllabus of various courses to find the best fit."
+            await update.message.reply_text("Thinking... Please wait a moment.")
+            ai_response = await generate_general_response_with_gemini(prompt)
+            await update.message.reply_text(ai_response, parse_mode='Markdown')
+            return
+            
+        elif "companies" in user_message and ("hire" in user_message or "job" in user_message):
+            # Extract the job role from the user's message
+            # This is a simplified check, can be made more advanced
+            job_roles = ['ml engineer', 'data scientist', 'software engineer', 'cloud architect']
+            found_role = None
+            for role in job_roles:
+                if role in user_message:
+                    found_role = role
+                    break
+            
+            if found_role:
+                prompt = f"Name some of the top companies that hire for the role of a {found_role}."
+                await update.message.reply_text("Thinking... Please wait a moment.")
+                ai_response = await generate_general_response_with_gemini(prompt)
+                await update.message.reply_text(ai_response, parse_mode='Markdown')
+                return
+        
+        # Default fallback for questions not handled above
+        await update.message.reply_text("I'm sorry, I couldn't find information for that. Please try asking about a specific course or ask 'what courses are available'.")
 
 def main() -> None:
     """Starts the bot."""
