@@ -27,7 +27,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends a welcome message and asks how to help."""
     await update.message.reply_text(
         "Hello! I am the Infotech company's course bot. How can I help you today?\n\n"
-        "You can ask me about our courses, their fees, mentors, or even a general question like 'which course is best?'."
+        "You can ask me about our courses, their fees, mentors, or even a general question like 'what is business analytics?'."
     )
 
 # Handler for "thank you" messages
@@ -159,6 +159,7 @@ def main() -> None:
 
     # Add command and message handlers
     application.add_handler(CommandHandler("start", start))
+    application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND) & (filters.Regex(r'(?i)hi|hello|hey|welcome')), start))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND) & filters.Regex(r'(?i)course|courses|what courses|list of courses'), get_courses))
     application.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_message))
 
