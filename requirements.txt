@@ -1,5 +1,6 @@
 python-telegram-bot==20.3
 pandas
-openai==0.28.0
-fpdf
+requests
+python-dotenv
+
 
